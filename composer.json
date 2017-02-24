@@ -26,6 +26,5 @@
         "psr-4": {
             "EloquentSearcher\\Test\\": "tests"
         }
-    },
-    "minimum-stability": "stable"
+    }
 }
