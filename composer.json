@@ -1,6 +1,7 @@
 {
     "name": "odoku/eloquent-searcher",
     "description": "Give searching power to Eloquent.",
+    "license": "MIT",
     "authors": [
         {
             "name": "odoku",
