@@ -142,36 +142,50 @@ class Searcher
 
     protected function range($query, $field, $value)
     {
-        $query = $this->gte($query, $field, current($value));
-        if (count($value) > 1) {
-            $query = $this->lte($query, $field, next($value));
+        if ($from = current($value)) {
+            $query = $this->gte($query, $field, current($value));
         }
+
+        if (count($value) > 1 && $to = next($value)) {
+            $query = $this->lte($query, $field, $to);
+        }
+
         return $query;
     }
 
     protected function dateRange($query, $field, $value)
     {
-        $from = (new Carbon(current($value)))->startOfDay();
-        $query = $this->gte($query, $field, $from);
-        if (count($value) > 1) {
-            $until = (new Carbon(next($value)))->startOfDay()->addDay();
+        if ($from = current($value)) {
+            $from = (new Carbon($from))->startOfDay();
+            $query = $this->gte($query, $field, $from);
+        }
+
+        if (count($value) > 1 && $until = next($value)) {
+            $until = (new Carbon($until))->startOfDay()->addDay();
             $query = $this->lt($query, $field, $until);
         }
+
         return $query;
     }
 
     protected function datetimeRange($query, $field, $value)
     {
-        $query = $this->gte($query, $field, new Carbon(current($value)));
-        if (count($value) > 1) {
-            $until = new Carbon(next($value));
-            $query = $this->lt($query, $field, $until);
+        if ($from = current($value)) {
+            $query = $this->gte($query, $field, new Carbon($from));
         }
+
+        if (count($value) > 1 && $until = next($value)) {
+            $query = $this->lt($query, $field, new Carbon($until));
+        }
+
         return $query;
     }
 
     protected function in($query, $field, $value)
     {
+        if (! $value) {
+            return $query;
+        }
         return $query->whereIn($field, $value);
     }
 
